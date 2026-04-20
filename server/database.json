@@ -1,0 +1,104 @@
+{
+  "users": [
+    {
+      "id": "1775392226480",
+      "email": "madhan123@gmail.com",
+      "password": "$2b$10$culDJ6DAPJjtottaSjIQD.s/2fLaAaeZv6f0fK2UJ6YKmqkcxB3qu",
+      "username": "madhan"
+    },
+    {
+      "id": "1775400643811",
+      "email": "Madhan123@gmail.com",
+      "password": "$2b$10$Ur6kOUp6uz0l3K5uOIsedOLkJB7xBtvBRjN4nXwSnfJpmgEu5HWDi",
+      "username": "Madhan"
+    },
+    {
+      "id": "1775400671554",
+      "email": "Madhan456@gmail.com",
+      "password": "$2b$10$SnTgsETTj2j3ZDv.47qBC.iSJRkwiSgm.S0.tldFz1Pnzfku6ErPK",
+      "username": "Madhan"
+    }
+  ],
+  "reports": [
+    {
+      "id": "1775394612438",
+      "latitude": 12.973068249999999,
+      "longitude": 80.2371215,
+      "imagePath": "uploads\\report-1775394612352-suite.jpeg",
+      "userId": "1775392226480",
+      "timestamp": "2026-04-05T13:10:12.438Z"
+    },
+    {
+      "id": "1775394775179",
+      "latitude": 12.973068249999999,
+      "longitude": 80.2371215,
+      "imagePath": "uploads\\report-1775394775174-waste.jpeg",
+      "userId": "1775392226480",
+      "timestamp": "2026-04-05T13:12:55.179Z"
+    },
+    {
+      "id": "1775395123118",
+      "latitude": 12.973062599351175,
+      "longitude": 80.23706798121114,
+      "imagePath": "uploads\\report-1775395123093-waste.jpeg",
+      "userId": "1775392226480",
+      "timestamp": "2026-04-05T13:18:43.118Z"
+    },
+    {
+      "id": "1775396050200",
+      "latitude": 12.966926580650398,
+      "longitude": 80.25086280620637,
+      "imagePath": "uploads\\report-1775396050195-waste.jpeg",
+      "userId": "1775392226480",
+      "timestamp": "2026-04-05T13:34:10.200Z"
+    },
+    {
+      "id": "1775396273304",
+      "latitude": 12.966926580650398,
+      "longitude": 80.25086280620637,
+      "imagePath": "uploads\\report-1775396273300-waste.jpeg",
+      "userId": "1775392226480",
+      "timestamp": "2026-04-05T13:37:53.304Z"
+    },
+    {
+      "id": "1775396446586",
+      "latitude": 12.973238085563667,
+      "longitude": 80.23696805109489,
+      "imagePath": "uploads\\report-1775396446584-waste.jpeg",
+      "userId": "1775392226480",
+      "timestamp": "2026-04-05T13:40:46.586Z"
+    },
+    {
+      "id": "1775398196038",
+      "latitude": 12.973238085563667,
+      "longitude": 80.23696805109489,
+      "imagePath": "uploads\\report-1775398196023-waste.jpeg",
+      "userId": "1775392226480",
+      "timestamp": "2026-04-05T14:09:56.039Z"
+    },
+    {
+      "id": "1775399032941",
+      "latitude": 12.973238085563667,
+      "longitude": 80.23696805109489,
+      "imagePath": "uploads\\report-1775399032936-waste.jpeg",
+      "userId": "1775392226480",
+      "timestamp": "2026-04-05T14:23:52.941Z"
+    },
+    {
+      "id": "1775399358646",
+      "latitude": 12.973238085563667,
+      "longitude": 80.23696805109489,
+      "imagePath": "uploads\\report-1775399358642-M'Final Image.jpeg",
+      "userId": "1775392226480",
+      "timestamp": "2026-04-05T14:29:18.646Z"
+    },
+    {
+      "id": "1775399583596",
+      "latitude": 12.973238085563667,
+      "longitude": 80.23696805109489,
+      "imagePath": "uploads\\report-1775399583590-waste.jpeg",
+      "userId": "1775392226480",
+      "timestamp": "2026-04-05T14:33:03.596Z"
+    }
+  ]
+}

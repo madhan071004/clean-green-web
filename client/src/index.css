@@ -1,0 +1,194 @@
+:root {
+  --primary: #04aa6d;
+  --secondary: #282a35;
+  --bg-dark: #111827;
+  --card-bg: #1f2937;
+  --border: #374151;
+  --text: #f3f4f6;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f1f1f1;
+  color: #212529;
+  overflow-x: hidden;
+}
+
+/* --- App Layout --- */
+
+.App {
+  min-height: 100vh;
+  padding-top: 105px; /* Offset for double header */
+}
+
+.container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* --- Header System --- */
+
+.top-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: #ffffff;
+  z-index: 1100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1.5rem;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.sub-header {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  right: 0;
+  height: 45px;
+  background: var(--secondary);
+  z-index: 1050;
+  display: flex;
+  align-items: center;
+  padding: 0 1.5rem;
+  gap: 1.2rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.sub-header::-webkit-scrollbar { display: none; }
+
+.sub-header a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  white-space: nowrap;
+  letter-spacing: 0.5px;
+}
+
+.sub-header a:hover { background: #000; padding: 13px 10px; }
+
+.search-bar {
+  flex: 1;
+  max-width: 450px;
+  margin: 0 2rem;
+  position: relative;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 0.6rem 1.2rem;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  background: #f8f8f8;
+  outline: none;
+}
+
+/* --- Dashboard Elements --- */
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.stat-card {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  text-align: center;
+}
+
+.stat-card h3 { font-size: 2.5rem; margin: 0; color: #000; }
+.stat-card p { margin: 0.5rem 0 0; color: #666; font-weight: 600; text-transform: uppercase; font-size: 0.8rem; }
+
+.main-flex {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 2rem;
+}
+
+@media (max-width: 1000px) { .main-flex { grid-template-columns: 1fr; } }
+
+.card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.map-container { height: 450px; border-radius: 8px; overflow: hidden; border: 1px solid #eee; }
+.leaflet-container { height: 100% !important; width: 100% !important; }
+
+.upload-box {
+  background: #f9f9f9;
+  border: 2px dashed #ddd;
+  border-radius: 12px;
+  height: 250px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 0.9rem;
+  border-radius: 30px;
+  font-weight: 700;
+  width: 100%;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.btn-primary:hover { background: #059862; }
+
+/* --- Rich Footer --- */
+
+.rich-footer {
+  background: var(--secondary);
+  color: #fff;
+  padding: 5rem 10% 2rem;
+  line-height: 1.6;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 4rem;
+  margin-bottom: 3rem;
+}
+
+.footer-col h4 { margin-top: 0; margin-bottom: 1.5rem; font-size: 1.2rem; }
+.footer-col ul { list-style: none; padding: 0; margin: 0; }
+.footer-col li { margin-bottom: 0.8rem; font-size: 0.9rem; opacity: 0.8; cursor: pointer; }
+.footer-col li:hover { text-decoration: underline; }
+
+.footer-bottom {
+  text-align: center;
+  padding-top: 3rem;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  font-size: 0.85rem;
+}
+
+.footer-bottom p { max-width: 800px; margin: 0 auto 1.5rem; opacity: 0.7; }
+
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+}
+
+.auth-card { width: 400px; padding: 3rem; }
+.auth-card input { width: 100%; padding: 0.8rem; margin-bottom: 1rem; border: 1px solid #ddd; border-radius: 8px; }
