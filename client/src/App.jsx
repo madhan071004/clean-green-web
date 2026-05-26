@@ -7,6 +7,11 @@ import L from 'leaflet';
 import './index.css';
 import GrievanceFeedSection from './components/GrievanceFeedSection';
 
+import { auth, db, storage } from './firebase';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "firebase/auth";
+import { collection, addDoc, deleteDoc, doc, query, orderBy, onSnapshot } from "firebase/firestore";
+import { ref, uploadString, getDownloadURL } from "firebase/storage";
+
 // Fix for default marker icons
 const DefaultIcon = L.icon({
     iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
@@ -24,8 +29,18 @@ function Header({ user, onLogout, theme, toggleTheme }) {
   const [showProfile, setShowProfile] = useState(false);
   const [showMissionModal, setShowMissionModal] = useState(false);
 
-  // Read reports count & recent reports for dynamic notification items!
-  const reports = JSON.parse(localStorage.getItem('reports') || '[]');
+  const [reports, setReports] = useState([]);
+
+  useEffect(() => {
+    const q = query(collection(db, "reports"), orderBy("timestamp", "desc"));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const arr = [];
+      snapshot.forEach(doc => arr.push({ id: doc.id, ...doc.data() }));
+      setReports(arr);
+    });
+    return () => unsubscribe();
+  }, []);
+
   const reportsCount = reports.length;
   const recentReports = reports.slice(0, 3);
 
@@ -298,19 +313,20 @@ function Dashboard() {
   const fileInputRef = useRef();
 
   useEffect(() => {
-    fetchHistory();
+    const q = query(collection(db, "reports"), orderBy("timestamp", "desc"));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const arr = [];
+      snapshot.forEach(doc => arr.push({ id: doc.id, ...doc.data() }));
+      setHistory(arr);
+    });
+
     navigator.geolocation.getCurrentPosition(
       (pos) => setPosition([pos.coords.latitude, pos.coords.longitude]),
       (err) => console.error(err)
     );
+    
+    return () => unsubscribe();
   }, []);
-
-  const fetchHistory = () => {
-    try {
-      const reports = JSON.parse(localStorage.getItem('reports') || '[]');
-      setHistory(reports.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)));
-    } catch (err) { console.error(err); }
-  };
 
   const handleImageChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -340,31 +356,31 @@ function Dashboard() {
     setIsSubmitting(true);
 
     try {
+      const imageRef = ref(storage, `reports/${Date.now()}_${Math.floor(Math.random() * 1000)}`);
+      await uploadString(imageRef, image, 'data_url');
+      const downloadURL = await getDownloadURL(imageRef);
+
       const newReport = {
-        id: `PET-${Date.now().toString().slice(-6)}`,
         latitude: position[0],
         longitude: position[1],
         category,
         problem,
-        imagePath: image, // Store Base64 string directly
+        imagePath: downloadURL,
         timestamp: new Date().toISOString()
       };
       
-      const reports = JSON.parse(localStorage.getItem('reports') || '[]');
-      reports.push(newReport);
-      localStorage.setItem('reports', JSON.stringify(reports));
+      const docRef = await addDoc(collection(db, "reports"), newReport);
 
       setStatus('success');
       setProblem('');
-      fetchHistory();
       
-      // AUTO GMAIL REDIRECT
       setTimeout(() => {
-        handleGmailDispatch(newReport);
+        handleGmailDispatch({ id: docRef.id, ...newReport });
         setStatus(null); setImage(null); setFile(null);
       }, 1500);
 
     } catch (err) { 
+      console.error(err);
       setStatus('error'); 
       setTimeout(() => setStatus(null), 3000);
     } finally { 
@@ -375,10 +391,7 @@ function Dashboard() {
   const handleDelete = async (id) => {
     setDeletingId(id);
     try {
-      let reports = JSON.parse(localStorage.getItem('reports') || '[]');
-      reports = reports.filter(r => r.id !== id);
-      localStorage.setItem('reports', JSON.stringify(reports));
-      fetchHistory();
+      await deleteDoc(doc(db, "reports", id));
     } catch (err) {
       console.error(err);
       alert("Delete failed");
@@ -487,22 +500,13 @@ function AuthPage({ type }) {
     setIsLoading(true);
     setError('');
     try {
-      const users = JSON.parse(localStorage.getItem('users') || '[]');
-      
       if (type === 'register') {
-        if (users.find(u => u.email === form.email)) {
-          throw new Error("Email already exists");
-        }
-        users.push({ ...form, id: Date.now() });
-        localStorage.setItem('users', JSON.stringify(users));
-        navigate('/login');
+        const userCredential = await createUserWithEmailAndPassword(auth, form.email, form.password);
+        await updateProfile(userCredential.user, { displayName: form.username });
+        navigate('/');
       } else {
-        const user = users.find(u => u.email === form.email && u.password === form.password);
-        if (!user) throw new Error("Invalid Credentials");
-        
-        localStorage.setItem('token', 'dummy-token-123');
-        localStorage.setItem('username', user.username);
-        window.location.href = '/';
+        await signInWithEmailAndPassword(auth, form.email, form.password);
+        navigate('/');
       }
     } catch (err) { 
       setError(err.message || "An error occurred."); 
@@ -620,22 +624,37 @@ function LocationMarker({ position, setPosition }) {
 }
 
 function App() {
-  const [user, setUser] = useState(localStorage.getItem('username'));
+  const [user, setUser] = useState(null);
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
+  const [authChecking, setAuthChecking] = useState(true);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
   }, [theme]);
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser.displayName || currentUser.email?.split('@')[0] || 'User');
+      } else {
+        setUser(null);
+      }
+      setAuthChecking(false);
+    });
+    return () => unsubscribe();
+  }, []);
+
   const toggleTheme = () => setTheme(prev => prev === 'light' ? 'dark' : 'light');
+
+  if (authChecking) return null;
 
   return (
     <BrowserRouter>
       <div className="App">
         <Header 
           user={user} 
-          onLogout={() => { localStorage.clear(); window.location.href='/login'; }} 
+          onLogout={() => signOut(auth)} 
           theme={theme}
           toggleTheme={toggleTheme}
         />
